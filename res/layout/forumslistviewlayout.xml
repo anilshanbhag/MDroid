@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/outer_frame"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/card_outer_padding_top"
+    android:paddingBottom="@dimen/card_outer_padding_bottom"
+    android:paddingRight="@dimen/card_outer_padding_horizontal"
+    android:paddingLeft="@dimen/card_outer_padding_horizontal"
+    android:descendantFocusability="blocksDescendants">
+    
+    <LinearLayout
+        android:id="@+id/inner_frame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:duplicateParentState="true"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/card_inner_padding_vertical"
+        android:paddingBottom="@dimen/card_inner_padding_vertical"
+        android:paddingRight="@dimen/card_inner_padding_right"
+        android:paddingLeft="@dimen/card_inner_padding_left" >
+        
+		<LinearLayout
+        	android:layout_width="match_parent"
+        	android:layout_height="60dp"
+        	android:gravity="center_vertical"
+        	android:orientation="vertical"
+        	android:paddingBottom="3dp"
+        	android:paddingTop="3dp" >
+
+        	<RelativeLayout
+	            android:layout_width="fill_parent"
+            	android:layout_height="40dp"
+            	android:gravity="center_vertical"
+            	android:orientation="horizontal"
+            	android:paddingBottom="3dp" >
+	
+            	<TextView
+	                android:id="@+id/forumThreadSubject"
+                	android:layout_width="wrap_content"
+                	android:layout_height="fill_parent"
+                	android:gravity="left"
+                	android:paddingBottom="3dp"
+                	android:paddingTop="6dp"
+                	android:textColor="@color/overWhite"
+                	android:textSize="20dp"
+                	android:text="forum topic"
+                	android:layout_marginRight="30dp" />
+	
+           		<TextView
+	                android:id="@+id/forumThreadRepliesCount"
+                	android:layout_width="30dp"
+                	android:layout_height="fill_parent"
+                	android:layout_alignParentRight="true"
+                	android:gravity="right"
+                	android:paddingBottom="3dp"
+                	android:paddingTop="8dp"
+                	android:text="(0)"
+                	android:textColor="@color/overWhite"
+                	android:textSize="16dp" />
+        	</RelativeLayout>
+
+	        <RelativeLayout
+            	android:layout_width="fill_parent"
+            	android:layout_height="20dp"
+            	android:gravity="center_vertical"
+            	android:orientation="horizontal"
+            	android:paddingBottom="3dp" >
+	
+            	<TextView
+	                android:id="@+id/forumThreadAuthor"
+                	android:layout_width="wrap_content"
+                	android:layout_height="fill_parent"
+                	android:gravity="left"
+                	android:textColor="@color/overWhiteLighter"
+                	android:textSize="12dp"
+                	android:text="ayush baid"
+                	android:layout_marginRight="130dp" />
+	
+            	<TextView
+	                android:id="@+id/forumThreadStartTime"
+                	android:layout_width="130dp"
+                	android:layout_height="fill_parent"
+                	android:layout_alignParentRight="true"
+                	android:gravity="right"
+                	android:textColor="@color/overWhiteLighter"
+                	android:textSize="12dp"
+                	android:text="22-08-12 13:34 PMS" />
+         
+        	</RelativeLayout>
+    	</LinearLayout>
+	</LinearLayout>
+	<ImageView 
+        android:src="@drawable/card_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/card_shadow"/>
+</LinearLayout>

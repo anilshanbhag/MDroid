@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/outer_frame"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/card_outer_padding_top"
+    android:paddingBottom="@dimen/card_outer_padding_bottom"
+    android:paddingRight="@dimen/card_outer_padding_horizontal"
+    android:paddingLeft="@dimen/card_outer_padding_horizontal"
+    android:descendantFocusability="blocksDescendants">
+
+    <LinearLayout
+        android:id="@+id/inner_frame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:duplicateParentState="true"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/card_inner_padding_vertical"
+        android:paddingBottom="@dimen/card_inner_padding_vertical"
+        android:paddingRight="@dimen/card_inner_padding_right"
+        android:paddingLeft="@dimen/card_inner_padding_left" >
+
+        <TextView
+            android:id="@android:id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:text="Week 1 - Week 2"
+            android:textSize="@dimen/card_title" />
+        <View 
+	        android:layout_width="match_parent"
+	        android:layout_height="1.5dp"
+	        android:layout_marginLeft="2dp"
+	        android:layout_marginRight="2dp"
+	        android:layout_marginTop="10dp"
+	        android:layout_marginBottom="10dp"
+	        android:background="@color/appBlue"/>
+
+        <LinearLayout
+            android:id="@+id/fileWeeklyList"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:cacheColorHint="#00000000"
+            android:orientation="vertical" />
+        
+
+    </LinearLayout>
+    <ImageView 
+        android:src="@drawable/card_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/card_shadow"/>
+
+</LinearLayout>

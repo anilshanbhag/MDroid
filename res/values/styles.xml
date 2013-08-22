@@ -1,0 +1,17 @@
+<resources>
+    <style name="Theme.MDroid" parent="Theme.Sherlock.Light">
+	    <item name="actionBarStyle">@style/Theme.MDroid.ActionBar</item>
+	    <item name="@android:actionBarStyle">@style/Theme.MDroid.ActionBar</item>
+	    <item name="actionBarStyle">@style/Theme.MDroid.ActionBar</item>
+	</style>
+	<style name="Theme.MDroid.ActionBar" parent="Widget.Sherlock.Light.ActionBar">
+	    <item name="android:background">#30a3d8</item>
+	    <item name="background">#30a3d8</item>
+		<item name="@android:titleTextStyle">@style/Theme.MDroid.ActionBar.TitleTextStyle</item>
+		<item name="titleTextStyle">@style/Theme.MDroid.ActionBar.TitleTextStyle</item>
+	</style>
+	<style name="Theme.MDroid.ActionBar.TitleTextStyle" parent="TextAppearance.Sherlock.Widget.ActionBar.Title">
+		<item name="android:textColor">#ffffff</item>
+	</style>
+    
+</resources>

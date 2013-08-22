@@ -1,0 +1,34 @@
+<!-- 
+
+Possible values for the android:showAsAction attribute
+Value	Meaning
+ifRoom	Display item if enough room is left for this item
+always	Display this item, regardless of the existing place
+never	This item is not displayed in the action bar directly but in the overflow menu
+withText	Display the icon together with the title text
+collapseActionView	Only relevant for collabsible action views – not covered in this post
+
+ -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item 
+        android:id="@+id/ChangeServer"
+        android:icon="@drawable/settings"
+        android:showAsAction="always"
+        android:title="Settings"
+        android:titleCondensed="Settings">
+    </item>
+    <item 
+        android:id="@+id/Rating"
+        android:icon="@drawable/star"
+        android:showAsAction="never"
+        android:title="Rate Me"
+        android:titleCondensed="Rate Me">
+    </item>
+    <item android:id="@+id/AboutMDroid"
+        android:icon="@drawable/help"
+        android:showAsAction="never"
+        android:title="About"
+        android:titleCondensed="About" >
+    </item>
+</menu>

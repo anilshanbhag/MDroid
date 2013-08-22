@@ -1,0 +1,94 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:id="@+id/layout_root"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp" >
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/mdroidhelpTopicsList"
+            android:textColor="@color/appBlue"
+            android:textSize="18dp"
+            android:layout_marginBottom="3dp" />
+        <View 
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/appBlue"
+            android:layout_marginBottom="3dp"/>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/mdroidhelpTopics"
+            android:textColor="@color/black"
+            android:textSize="15dp" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/mdroidhelpLoginHeading"
+            android:textColor="@color/appBlue"
+            android:layout_marginBottom="3dp"
+            android:layout_marginTop="20dp"
+            android:textSize="18dp" />
+        <View 
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/appBlue"
+            android:layout_marginBottom="3dp"/>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/mdroidhelpLogin"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/mdroidhelpCourseHeading"
+            android:textColor="@color/appBlue"
+            android:layout_marginBottom="3dp"
+            android:layout_marginTop="20dp"
+            android:textSize="18dp" />
+        <View 
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/appBlue"
+            android:layout_marginBottom="3dp"/>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/mdroidhelpCourse"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/mdroidhelpFilesHeading"
+            android:textColor="@color/appBlue"
+            android:layout_marginBottom="3dp"
+            android:layout_marginTop="20dp"
+            android:textSize="18dp" />
+        <View 
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/appBlue"
+            android:layout_marginBottom="3dp"/>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/mdroidhelpFiles"
+            android:textColor="@color/black"/>
+        
+    </LinearLayout>
+
+</ScrollView>

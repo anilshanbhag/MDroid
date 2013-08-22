@@ -1,0 +1,7 @@
+<View xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/filecard_divider"
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:background="@color/appBlue"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"/>
