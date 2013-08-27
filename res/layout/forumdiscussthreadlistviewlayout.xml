@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true"
+    android:fastScrollEnabled="true"
+    android:fadeScrollbars="true" >
+    
+<LinearLayout
     android:id="@+id/forumsdiscussthreadlayout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -8,7 +15,7 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="45dp"
+        android:layout_height="wrap_content"
         android:background="@color/appBlue"
         android:orientation="horizontal"
         android:paddingBottom="3dp"
@@ -21,7 +28,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="vertical"
             android:paddingBottom="0.7dp"
@@ -31,38 +38,45 @@
             <TextView
                 android:id="@+id/forumDiscussThreadSubject"
                 android:layout_width="fill_parent"
-                android:layout_height="23.5dp"
+                android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:paddingBottom="1dp"
+                android:singleLine="true"
                 android:paddingTop="2dp"
                 android:textColor="@color/white"
-                android:textSize="15dp" />
+                android:textSize="15sp" />
 
             <RelativeLayout
                 android:layout_width="fill_parent"
-                android:layout_height="16.5dp"
+                android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingBottom="1dp" >
+                android:paddingBottom="3dp" >
 
                 <TextView
                     android:id="@+id/forumDiscussThreadAuthor"
                     android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:gravity="left"
-                    android:layout_marginRight="140dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginRight="30dp"
+                    android:layout_toLeftOf="@+id/forumDiscussThreadReplyTime"
+                    android:singleLine="true"
+                    android:text="MANISH SHAILESH GOREGSOKAR"
                     android:textColor="@color/greyishwhite"
-                    android:textSize="12dp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/forumDiscussThreadReplyTime"
-                    android:layout_width="140dp"
-                    android:layout_height="fill_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
 					android:layout_alignParentRight="true"
-					android:gravity="right"
+					android:layout_alignBaseline="@id/forumDiscussThreadAuthor"
                     android:paddingRight="3dp"
                     android:textColor="@color/greyishwhite"
-                    android:textSize="12dp" />
+                    android:singleLine="true"
+                    android:textSize="12sp" 
+                    android:text="9 August 2013.7:20 PM"/>
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
@@ -72,9 +86,29 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:lineSpacingExtra="5dp"
-        android:paddingLeft="20dp"
+        android:paddingLeft="15dp"
         android:textColor="@color/overWhite"
-        android:textSize="14dp" 
+        android:textSize="14sp" 
         android:text="Test" />
-
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:id="@+id/attachmentContainer">
+    	<View 
+        	android:layout_width="match_parent"
+	        android:layout_height="1.5dp"
+        	android:layout_marginLeft="5dp"
+        	android:layout_marginRight="5dp"
+        	android:layout_marginBottom="10dp"
+        	android:background="@color/appBlue"/>
+  		<LinearLayout
+	      	android:id="@+id/attachments"
+      		android:layout_width="fill_parent"
+      		android:layout_height="wrap_content"
+      		android:cacheColorHint="#00000000"
+      		android:orientation="vertical"/>
+ 	</LinearLayout>
 </LinearLayout>
+</ScrollView>

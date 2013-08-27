@@ -30,6 +30,8 @@ public class Forums extends BaseActivity {
 
 	String courseName = "";
 	String courseID = "";
+	String forumID = "";
+	String forumName = "";
 	String discussionCount = "0";
 	ArrayList<String> DiscussionIDs = new ArrayList<String>();
 	ArrayList<String> DiscussionSubject = new ArrayList<String>();
@@ -50,25 +52,26 @@ public class Forums extends BaseActivity {
 		}
 		courseID = extras.getString("courseID");
 		courseName = extras.getString("courseName");
+		forumID = extras.getString("forumID");
+		forumName = extras.getString("forumName");
 
 		// Setting title of FileListing activity..
-		setTitle("Forums (" + discussionCount + "): " + courseName);
+		setTitle(forumName + " (" + discussionCount + "): " + courseName);
 
-		new getForumsPageContent().execute(courseID);
+		new getForumsPageContent().execute(forumID);
 	}
 
 	/* AsycTask Thread */
 	private class getForumsPageContent extends AsyncTask<String, Integer, Long> {
-		protected Long doInBackground(String... courseID) {
+		protected Long doInBackground(String... forumID) {
 
 			try {
-				getPageContentForumsOne(courseID[0]);
+				getPageContentForumsTwo(forumID[0]);
 			} catch (ClientProtocolException e) {
 
 			} catch (IOException e) {
 
 			}
-
 			return null;
 		}
 
@@ -77,7 +80,7 @@ public class Forums extends BaseActivity {
 
 		protected void onPostExecute(Long result) {
 			// Changing title of FileListing activity..
-			setTitle("Forums (" + discussionCount + "): " + courseName);
+			setTitle(forumName + " (" + discussionCount + "): " + courseName);
 
 			listFilesInListView(DiscussionIDs, DiscussionSubject,
 					DiscussionAuthor, DiscussionRepliesCount,
@@ -86,74 +89,6 @@ public class Forums extends BaseActivity {
 		}
 
 	}
-
-	public void getPageContentForumsOne(String courseID)
-			throws ClientProtocolException, IOException {
-
-		DefaultHttpClient httpclient = MainActivity.httpclient;
-
-		HttpGet httpgetCourse = new HttpGet(serverAddress
-				+ "/mod/forum/index.php?id=" + courseID);
-
-		HttpResponse responseCourse = httpclient.execute(httpgetCourse);
-		HttpEntity entityCourse = responseCourse.getEntity();
-
-		try {
-			inputStreamToStringForumsOne(responseCourse.getEntity()
-					.getContent());
-		} catch (IOException e) {
-
-		}
-
-		if (entityCourse != null) {
-			entityCourse.consumeContent();
-		}
-	}
-
-	private void inputStreamToStringForumsOne(InputStream is)
-			throws IOException {
-		String line = "";
-		StringBuilder total = new StringBuilder();
-
-		// Wrap a BufferedReader around the InputStream
-		BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-
-		// Read response until the end
-		while ((line = rd.readLine()) != null) {
-			total.append(line);
-		}
-
-		extractFileDetailsForForumsOne(total.toString());
-	}
-
-	public void extractFileDetailsForForumsOne(String htmlDataString) {
-
-		int prevIndex = 0;
-		int endIndex = 0;
-		String forumViewID = "";
-
-		while (true) {
-			prevIndex = htmlDataString.indexOf("<a href=\"view.php?f=",
-					prevIndex);
-
-			if (prevIndex == -1)
-				break;
-
-			prevIndex += 20;
-			endIndex = htmlDataString.indexOf("\"", prevIndex);
-			forumViewID = (htmlDataString.substring(prevIndex, endIndex));
-		}
-
-		try {
-			getPageContentForumsTwo(forumViewID);
-		} catch (ClientProtocolException e) {
-
-		} catch (IOException e) {
-
-		}
-
-	}
-
 	public void getPageContentForumsTwo(String forumViewID)
 			throws ClientProtocolException, IOException {
 
@@ -379,6 +314,7 @@ public class Forums extends BaseActivity {
 					i.putExtra("discussID", subjectTextView.getHint()
 							+ "&mode=1");
 					i.putExtra("discussSubject", subjectTextView.getText());
+					i.putExtra("courseName", courseName);
 					startActivityForResult(i, REQUEST_CODE);
 				}
 			});

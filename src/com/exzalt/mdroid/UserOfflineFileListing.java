@@ -37,7 +37,7 @@ public class UserOfflineFileListing extends BaseActivity {
 			return;
 		}
 		courseFolderName = extras.getString("courseFolderName");
-
+		setTitle(courseFolderName);
 		File root = new File(android.os.Environment
 				.getExternalStorageDirectory().getPath()
 				+ "/MDroid/"
@@ -83,15 +83,21 @@ public class UserOfflineFileListing extends BaseActivity {
 
 				}
 			}
-			listFilesInListView(offlineFileName, offlineFileDateModified,
-					offlineFileSize);
 		}
+		listFilesInListView(offlineFileName, offlineFileDateModified,
+				offlineFileSize);
 	}
 
 	public void listFilesInListView(ArrayList<String> offlineFileName,
 			ArrayList<String> offlineFileDateModified,
 			ArrayList<String> offlineFileSize) {
-
+		
+		System.out.println("list func called");
+		if(offlineFileName.size()==0){
+			System.out.println("no files");
+			((TextView) this.findViewById(R.id.noOfflineFiles)).setVisibility(View.VISIBLE);
+			return;
+		}
 		ListView listView = (ListView) findViewById(R.id.myCourseFilesOffline);
 
 		MySimpleArrayAdapter adapter = new MySimpleArrayAdapter(this,

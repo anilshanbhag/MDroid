@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout 
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="wrap_content"
     android:background="@color/activityBackground" >
 
     <LinearLayout
         android:id="@+id/linearLayoutLoadingDiscussThread"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/activityBackground"
+        android:background="@color/white"
         android:gravity="center_horizontal"
-        android:orientation="horizontal" >
+        android:orientation="vertical" >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/linearLayoutLoadingText"
-            android:textColor="@color/overBackground" />
+            android:textColor="@color/overBackground"
+            android:textSize="15sp" />
 
         <ProgressBar
-            style="?android:attr/progressBarStyleSmall"
+            style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" 
             android:color="@color/overBackground" />

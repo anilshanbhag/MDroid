@@ -2,7 +2,7 @@ package com.exzalt.mdroid;
 
 import java.util.ArrayList;
 
-import com.exzalt.mdroid.R;
+import com.exzalt.mdroid.TimeLine.CardAdapter;
 import com.exzalt.mdroid.model.Week;
 
 /**

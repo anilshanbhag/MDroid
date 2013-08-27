@@ -25,7 +25,7 @@
         
 		<LinearLayout
         	android:layout_width="match_parent"
-        	android:layout_height="60dp"
+        	android:layout_height="wrap_content"
         	android:gravity="center_vertical"
         	android:orientation="vertical"
         	android:paddingBottom="3dp"
@@ -42,12 +42,11 @@
 	                android:id="@+id/forumThreadSubject"
                 	android:layout_width="wrap_content"
                 	android:layout_height="fill_parent"
-                	android:gravity="left"
-                	android:paddingBottom="3dp"
-                	android:paddingTop="6dp"
+                	android:gravity="left|center_vertical"
                 	android:textColor="@color/overWhite"
                 	android:textSize="20dp"
                 	android:text="forum topic"
+                	android:singleLine="true"
                 	android:layout_marginRight="30dp" />
 	
            		<TextView
@@ -55,15 +54,21 @@
                 	android:layout_width="30dp"
                 	android:layout_height="fill_parent"
                 	android:layout_alignParentRight="true"
-                	android:gravity="right"
-                	android:paddingBottom="3dp"
-                	android:paddingTop="8dp"
+                	android:gravity="right|center_vertical"
                 	android:text="(0)"
+                	android:singleLine="true"
                 	android:textColor="@color/overWhite"
                 	android:textSize="16dp" />
         	</RelativeLayout>
-
-	        <RelativeLayout
+			<View 
+    			android:id="@+id/filecard_divider"
+    			android:layout_width="match_parent"
+    			android:layout_height="1dp"
+    			android:background="@color/appBlue"
+    			android:layout_marginBottom="5dp"
+    			android:layout_marginLeft="5dp"
+    			android:layout_marginRight="5dp"/>
+        	<RelativeLayout
             	android:layout_width="fill_parent"
             	android:layout_height="20dp"
             	android:gravity="center_vertical"
@@ -74,20 +79,22 @@
 	                android:id="@+id/forumThreadAuthor"
                 	android:layout_width="wrap_content"
                 	android:layout_height="fill_parent"
-                	android:gravity="left"
+                	android:gravity="left|center_vertical"
                 	android:textColor="@color/overWhiteLighter"
                 	android:textSize="12dp"
                 	android:text="ayush baid"
+                	android:singleLine="true"
                 	android:layout_marginRight="130dp" />
 	
             	<TextView
 	                android:id="@+id/forumThreadStartTime"
-                	android:layout_width="130dp"
+                	android:layout_width="wrap_content"
                 	android:layout_height="fill_parent"
                 	android:layout_alignParentRight="true"
-                	android:gravity="right"
+                	android:gravity="right|center_vertical"
                 	android:textColor="@color/overWhiteLighter"
                 	android:textSize="12dp"
+                	android:singleLine="true"
                 	android:text="22-08-12 13:34 PMS" />
          
         	</RelativeLayout>

@@ -18,17 +18,25 @@ collapseActionView	Only relevant for collabsible action views – not covered in
         android:title="Settings"
         android:titleCondensed="Settings">
     </item>
-    <item 
-        android:id="@+id/Rating"
-        android:icon="@drawable/star"
-        android:showAsAction="never"
-        android:title="Rate Me"
-        android:titleCondensed="Rate Me">
-    </item>
-    <item android:id="@+id/AboutMDroid"
-        android:icon="@drawable/help"
-        android:showAsAction="never"
-        android:title="About"
-        android:titleCondensed="About" >
-    </item>
+    <item
+    android:id="@+id/root_menu"
+    android:icon="@drawable/abs__ic_menu_moreoverflow_holo_light"
+    android:showAsAction="always"
+    android:title="More">
+    	<menu>
+	    	<item 
+	        	android:id="@+id/Rating"
+        		android:icon="@drawable/star"
+        		android:showAsAction="never"
+        		android:title="Rate Me"
+        		android:titleCondensed="Rate Me">
+    		</item>
+    		<item android:id="@+id/AboutMDroid"
+		        android:icon="@drawable/help"
+        		android:showAsAction="never"
+        		android:title="About"
+        		android:titleCondensed="About" >
+    		</item>
+   		</menu>
+	</item>
 </menu>

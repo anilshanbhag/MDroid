@@ -156,6 +156,7 @@ public class MainActivity extends BaseActivity {
 				editor.putBoolean("firstTime", false);
 				editor.commit();
 				firstTimeDialog.dismiss();
+				showDialog(1);
 			}
 		});
 		

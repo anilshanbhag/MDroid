@@ -48,6 +48,11 @@ public class TimeLine extends BaseActivity{
 	ArrayList<Week> weekFiles = new ArrayList<Week>();
 	String courseName = "";
 	String courseID = "";
+	ArrayList<String> forumViewIDs = new ArrayList<String>();
+	ArrayList<String> forumNames = new ArrayList<String>();
+	boolean fileComplete = false;
+	boolean forumComplete = false;
+	
 	LayoutInflater inflater;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -61,20 +66,8 @@ public class TimeLine extends BaseActivity{
 		courseID = extras.getString("courseID");
 		courseName = extras.getString("courseName");
 		setTitle(courseName);
-		LinearLayout forumCard = (LinearLayout) findViewById(R.id.forum_card);
-		LinearLayout fileCard = (LinearLayout) findViewById(R.id.files_card);
-		forumCard.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				final int REQUEST_CODE = 14;
-                Intent i = new Intent(getBaseContext(), Forums.class);
-                i.putExtra("courseID", courseID);
-                i.putExtra("courseName", courseName);
-                startActivityForResult(i, REQUEST_CODE);
-			}
-		});
-		
 		new getPageContent().execute(courseID);
+		new getForumsPageContent().execute(courseID);
 	}
 	/* AsycTask Thread */
 
@@ -106,12 +99,99 @@ public class TimeLine extends BaseActivity{
 		}
 		protected void onPostExecute(Long result) {
 			listFilesInTimeLine(weekFiles);
-			if(weekFiles.size()!=0)
-				findViewById(R.id.files_card).setVisibility(View.GONE);
-			else{
-				findViewById(R.id.progressBar).setVisibility(View.GONE);
-				((TextView)findViewById(R.id.filetitle)).setText("No Files Uploaded");
-			}	
+			fileComplete = true;
+			removeLoading();
+		}
+	}
+	private class getForumsPageContent extends AsyncTask<String, Integer, Long> {
+		protected Long doInBackground(String... courseID) {
+
+			try {
+				getPageContentForumsOne(courseID[0]);
+			} catch (ClientProtocolException e) {
+
+			} catch (IOException e) {
+
+			}
+			return null;
+		}
+
+		protected void onProgressUpdate(Integer... progress) {
+		}
+
+		protected void onPostExecute(Long result) {
+			listForumsInTimeLine();
+			forumComplete = true;
+			removeLoading();
+		}
+	}
+	public void getPageContentForumsOne(String courseID)
+			throws ClientProtocolException, IOException {
+
+		DefaultHttpClient httpclient = MainActivity.httpclient;
+
+		HttpGet httpgetCourse = new HttpGet(serverAddress
+				+ "/mod/forum/index.php?id=" + courseID);
+
+		HttpResponse responseCourse = httpclient.execute(httpgetCourse);
+		HttpEntity entityCourse = responseCourse.getEntity();
+
+		try {
+			inputStreamToStringForumsOne(responseCourse.getEntity()
+					.getContent());
+		} catch (IOException e) {
+
+		}
+
+		if (entityCourse != null) {
+			entityCourse.consumeContent();
+		}
+	}
+	private void inputStreamToStringForumsOne(InputStream is)
+			throws IOException {
+		String line = "";
+		StringBuilder total = new StringBuilder();
+
+		// Wrap a BufferedReader around the InputStream
+		BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+
+		// Read response until the end
+		while ((line = rd.readLine()) != null) {
+			total.append(line);
+		}
+
+		extractForums(total.toString());
+	}public void extractForums(String htmlDataString) {
+
+		int prevIndex = 0;
+		int endIndex = 0;
+
+		while (true) {
+			prevIndex = htmlDataString.indexOf("<a href=\"view.php?f=",
+					prevIndex);
+
+			if (prevIndex == -1)
+				break;
+
+			prevIndex += 20;
+			endIndex = htmlDataString.indexOf("\"", prevIndex);
+			if(endIndex == -1){
+				Toast.makeText(getBaseContext(), "Error !",
+						Toast.LENGTH_SHORT).show();
+			}
+			forumViewIDs.add((htmlDataString.substring(prevIndex, endIndex)));
+			prevIndex = htmlDataString.indexOf(">", prevIndex);
+			if (prevIndex == -1)
+				break;
+			prevIndex +=1;
+			endIndex = htmlDataString.indexOf("<", prevIndex);
+			if(endIndex == -1){
+				Toast.makeText(getBaseContext(), "Error !",
+						Toast.LENGTH_SHORT).show();
+			}
+			forumNames.add((htmlDataString.substring(prevIndex, endIndex)));
+			prevIndex = htmlDataString.indexOf("<a href=\"view.php?f=",
+					prevIndex)+5;
 		}
 	}
 	/*
@@ -159,6 +239,10 @@ public class TimeLine extends BaseActivity{
 				break;
 			prevIndex = htmlDataString.indexOf(">",prevIndex)+2;
 			endIndex = htmlDataString.indexOf("<",prevIndex);
+			if(endIndex == -1){
+				Toast.makeText(getBaseContext(), "Error !",
+						Toast.LENGTH_SHORT).show();
+			}
 			Week temp = new Week();
 			temp.weekSpan = htmlDataString.substring(prevIndex, endIndex);
 			nextIndex = htmlDataString.indexOf("class=\"sectionname\"",prevIndex);
@@ -177,12 +261,28 @@ public class TimeLine extends BaseActivity{
 					break;
 				
 				endIndex1 = subStr.indexOf('\"', prevIndex1);
+				if(endIndex1 == -1){
+					Toast.makeText(getBaseContext(), "Error !",
+							Toast.LENGTH_SHORT).show();
+				}
 				temp.resourcesFileIDs.add(subStr.substring(prevIndex1, endIndex1));
 				
 				prevIndex1 = subStr.indexOf("<span", prevIndex1) + 5;
+				if(prevIndex1 == -1){
+					Toast.makeText(getBaseContext(), "Error !",
+							Toast.LENGTH_SHORT).show();
+				}
 				prevIndex1 = subStr.indexOf(">", prevIndex1) + 1;
+				if(prevIndex1 == -1){
+					Toast.makeText(getBaseContext(), "Error !",
+							Toast.LENGTH_SHORT).show();
+				}
 				endIndex1 = subStr.indexOf("<span class=\"accesshide",
 						prevIndex1); 
+				if(endIndex1 == -1){
+					Toast.makeText(getBaseContext(), "Error !",
+							Toast.LENGTH_SHORT).show();
+				}
 				String textConvertedhtmlDataString = subStr.substring(
 						prevIndex1, endIndex1);
 				textConvertedhtmlDataString = android.text.Html.fromHtml(
@@ -248,18 +348,20 @@ public class TimeLine extends BaseActivity{
 	}
 	public void listFilesInTimeLine(ArrayList<Week> weeklyFile){
 		ListView fileList = (ListView) findViewById(R.id.filesListView);
-		if(fileList == null){
-			System.out.println("bc");
-			return;
-		}
 		CardAdapter cardAdapter = new CardAdapter(this);
-		System.out.println("weekly file size = "+weeklyFile.size());
 		for(int i=0; i<weeklyFile.size(); i++){
 			System.out.println(weeklyFile.get(i).weekSpan);
 			cardAdapter.add(new FileCard(weeklyFile.get(i)));
 		}
 		fileList.setAdapter(cardAdapter);
 		ListHelper.getListViewSize(fileList);
+
+	}
+	void listForumsInTimeLine(){
+		ListView forumList = (ListView) findViewById(R.id.forumsListView);
+		ForumCardAdapter forumCardAdapter = new ForumCardAdapter(this, forumViewIDs, forumNames);
+		forumList.setAdapter(forumCardAdapter);
+		ListHelper.getListViewSize(forumList);
 		System.out.println("cardAdapter set");
 	}
 	public class DownloadFile extends AsyncTask<String, Integer, String> {
@@ -663,7 +765,7 @@ public class TimeLine extends BaseActivity{
 	        }
 			invalidatePadding(position, convertView);
 			FileCard item = new FileCard(getItem(position));
-	        TextView title = (TextView) convertView.findViewById(android.R.id.title);
+	        TextView title = (TextView) convertView.findViewById(R.id.title);
 	        if (title == null)
 	            throw new RuntimeException("The card layout must contain a TextView with the ID @android:id/title.");
 	        LinearLayout fileList = (LinearLayout) convertView.findViewById(R.id.fileWeeklyList);
@@ -749,6 +851,134 @@ public class TimeLine extends BaseActivity{
 	        }
 	        return false;
 	    }
+	}
+	public class ForumCardAdapter extends BaseAdapter {
+
+	    private Context context;
+		private ArrayList<String> forumIDs;
+		private ArrayList<String> forumNames; 
+		private boolean isChanged = false;
+	    private int mScrollState = AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
+	    private int mAccentColor;
+	    private int mPopupMenu = -1;
+	    private boolean mCardsClickable = false;
+	    private int mLayout = R.layout.forum_title_card;
+		public ForumCardAdapter(Context context, ArrayList<String> IDs, ArrayList<String> names) {
+	        this.context = context;
+	        this.forumIDs = IDs;
+	        this.forumNames = names;
+	        mAccentColor = context.getResources().getColor(android.R.color.black);
+	    }
+		@Override
+	    public boolean isEnabled(int position) {
+	        if (!mCardsClickable) 
+	        	return false;
+	        else
+	        	return true;
+	    }
+
+	    /**
+	     * Sets the accent color used on card titles and header action buttons.
+	     * You <b>should</b> call this method before adding any cards to the adapter to avoid issues.
+	     *
+	     * @param color The resolved color to use as an accent.
+	     */
+	    public final ForumCardAdapter setAccentColor(int color) {
+	        mAccentColor = color;
+	        return this;
+	    }
+
+	    /**
+	     * Sets the accent color resource used on card titles and header action buttons.
+	     * You <b>should</b> call this method before adding any cards to the adapter to avoid issues.
+	     *
+	     * @param colorRes The color resource ID to use as an accent.
+	     */
+	    public final ForumCardAdapter setAccentColorRes(int colorRes) {
+	        setAccentColor(getContext().getResources().getColor(colorRes));
+	        return this;
+	    }
+	    /**
+	     * Sets a custom layout to be used for all cards (not including headers) in the adapter. Must be called before
+	     * adding cards. This <b>does not</b> override layouts set to individual cards.
+	     */
+	    public final ForumCardAdapter setCardLayout(int layoutRes) {
+	        mLayout = layoutRes;
+	        return this;
+	    }
+	    private void invalidatePadding(int index, View view) {
+	        int top = index == 0 ? R.dimen.card_outer_padding_firstlast : R.dimen.card_outer_padding_top;
+	        int bottom = index == (getCount() - 1) ? R.dimen.card_outer_padding_firstlast : R.dimen.card_outer_padding_top;
+	        view.setPadding(view.getPaddingLeft(),
+	                getContext().getResources().getDimensionPixelSize(top),
+	                view.getPaddingRight(),
+	                getContext().getResources().getDimensionPixelSize(bottom));
+	    }
+		@Override
+		public int getCount() {
+			// TODO Auto-generated method stub
+			return forumNames.size();
+		}
+
+		@Override
+	    public String getItem(int i) {
+	        return forumNames.get(i);
+	    }
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			if (convertView == null) {
+	            convertView = LayoutInflater.from(context).inflate(R.layout.forum_title_card, null);
+	        }
+			invalidatePadding(position, convertView);
+			final int pos = position;
+			convertView.setOnClickListener(new OnClickListener(){
+					@Override
+                    public void onClick(View v) {
+						final int REQUEST_CODE = 14;
+						Intent i = new Intent(getBaseContext(), Forums.class);
+						i.putExtra("courseID", courseID);
+						i.putExtra("courseName", courseName);
+						i.putExtra("forumID", forumIDs.get(pos));
+						i.putExtra("forumName", forumNames.get(pos));
+						startActivityForResult(i, REQUEST_CODE);
+                    }
+			});
+	        TextView title = (TextView) convertView.findViewById(R.id.forumtitle);
+	        if (title == null)
+	            throw new RuntimeException("The card layout must contain a TextView with the ID @android:id/title.");
+	        
+	        //TODO add file names and others
+	        title.setText(forumNames.get(position));
+
+	        return convertView;
+		}
+		public final Context getContext() {
+			return context;
+		}
+		//functions below from Silk Adapter
+		public void add(int index, String name, String ID) {
+	        isChanged = true;
+	        this.forumNames.add(index, name);
+	        this.forumIDs.add(index, ID);
+	        notifyDataSetChanged();
+	    }
+		/**
+	     * Adds a single item to the adapter and notifies the attached ListView.
+	     */
+	    public void add(String name, String ID) {
+	        isChanged = true;
+	        this.forumNames.add(name);
+	        System.out.println("item recieved for adding : ");
+	        notifyDataSetChanged();
+	    }
+	}
+	void removeLoading(){
+		if(fileComplete && forumComplete)
+			this.findViewById(R.id.timelineLoading).setVisibility(View.GONE);
 	}
 	
 }
