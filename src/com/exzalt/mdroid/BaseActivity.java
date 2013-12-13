@@ -24,44 +24,45 @@ public class BaseActivity extends SherlockActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater =	getSupportMenuInflater();
+		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.main_menu, menu);
 		return true;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.AboutMDroid:
-			showDialog(0); break;
+			showDialog(0);
+			break;
 		case R.id.ChangeServer:
-			showDialog(1); break;
+			showDialog(1);
+			break;
 		case R.id.Rating:
-			showDialog(2); break;
+			showDialog(2);
+			break;
 		}
 		return true;
 	}
 
 	public Dialog onCreateDialog(int id) {
-		final Dialog dialog=new Dialog(this);
-		/*
-		 * TODO: Currently settings - copied wrong code :-/
-		 */
+		final Dialog dialog = new Dialog(this);
+
 		switch (id) {
 		case 0:
 			dialog.setContentView(R.layout.aboutmdroid);
 			dialog.setTitle("About");
 			break;
-			
+
 		case 1:
 			dialog.setContentView(R.layout.settings);
 			dialog.setTitle("Settings");
 
 			final EditText changedServerEditText = (EditText) dialog
 					.findViewById(R.id.changeServerEditText);
-			final TextView errors = (TextView) dialog.findViewById(R.id.settingsError);
-			
+			final TextView errors = (TextView) dialog
+					.findViewById(R.id.settingsError);
+
 			changedServerEditText.setText(serverAddress);
 
 			Button changeServerValueButton = (Button) dialog
@@ -75,27 +76,33 @@ public class BaseActivity extends SherlockActivity {
 							.toString();
 					errors.setVisibility(View.GONE);
 					// Check validity of user entry
-					if (newServerName.lastIndexOf("/") == newServerName.length() - 1) {
-						newServerName = newServerName.substring(0, newServerName.length() - 1);
-					}
-					
-					if (newServerName == ""){
+
+					if (newServerName == "") {
 						errors.setVisibility(View.VISIBLE);
 						errors.setText("Server URL cannot be empty");
-					} else {
-						// Saving in preferences..
-						SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
-						SharedPreferences.Editor editor = prefs.edit();
-						editor.putString("serverAddress", newServerName);
-						editor.commit();
-						serverAddress = newServerName;
-						dialog.dismiss();
-	
-						Toast.makeText(getBaseContext(),
-								"Server Preference Saved\n" + serverAddress,
-								Toast.LENGTH_SHORT).show();	
-						System.out.println("Server Preference Saved\n" + serverAddress);
+						return;
+					} else if (!(newServerName.substring(0, 7))
+							.equals("http://")) {
+						errors.setVisibility(View.VISIBLE);
+						errors.setText("Server URL should start with http://");
+						return;
 					}
+					if (newServerName.lastIndexOf("/") == newServerName
+							.length() - 1) {
+						newServerName = newServerName.substring(0,
+								newServerName.length() - 1);
+					}
+					// Saving in preferences..
+					SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
+					SharedPreferences.Editor editor = prefs.edit();
+					editor.putString("serverAddress", newServerName);
+					editor.commit();
+					serverAddress = newServerName;
+					dialog.dismiss();
+
+					Toast.makeText(getBaseContext(),
+							"Server Preference Saved\n" + serverAddress,
+							Toast.LENGTH_SHORT).show();
 				}
 			});
 
@@ -105,7 +112,7 @@ public class BaseActivity extends SherlockActivity {
 				}
 			});
 			break;
-			
+
 		case 2:
 			dialog.setContentView(R.layout.rating);
 			dialog.setTitle("Rate Me");
@@ -122,16 +129,12 @@ public class BaseActivity extends SherlockActivity {
 					// Saving prefs
 					appPrefs.saveIntPrefs("rated", 1);
 
-					if (i[0] <= 3) {
-						dialog.setContentView(R.layout.mdroidhelp);
-						dialog.setTitle("Help");
-					} else {
-						dialog.dismiss();
-						Intent intent = new Intent(Intent.ACTION_VIEW);
-						intent.setData(Uri
-								.parse("market://details?id=com.exzalt.mdroid"));
-						startActivity(intent);
-					}
+					dialog.dismiss();
+					Intent intent = new Intent(Intent.ACTION_VIEW);
+					intent.setData(Uri
+							.parse("market://details?id=com.exzalt.mdroid"));
+					startActivity(intent);
+
 				}
 			});
 			break;

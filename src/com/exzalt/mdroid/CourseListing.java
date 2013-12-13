@@ -18,15 +18,14 @@ import android.widget.Toast;
 public class CourseListing extends BaseActivity {
 	public Context context = this;
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		setContentView(R.layout.courselisting);
-		
+
 		// For getting Preferences
 		appPrefs = new AppPreferences(getApplicationContext());
-		
+
 		int loginCount = appPrefs.getIntPrefs("logincount");
 		int rated = appPrefs.getIntPrefs("rated");
 
@@ -41,34 +40,33 @@ public class CourseListing extends BaseActivity {
 
 		int prevIndex = 0;
 		int endIndex = 0;
-		ArrayList<String> courseIDs = new ArrayList<String>();
+		ArrayList<Integer> courseIDs = new ArrayList<Integer>();
 		ArrayList<String> courseNames = new ArrayList<String>();
-		String userName = "";
-
-		prevIndex = htmlData.indexOf("You are logged in as ", prevIndex);
-		prevIndex = htmlData.indexOf("\">", prevIndex) + 2;
-		endIndex = htmlData.indexOf("</a>", prevIndex);
-		userName = (htmlData.substring(prevIndex, endIndex));
-
 		// Setting title of the Course Activity...
-		setTitle(userName + "'s courses");
+		setTitle("MDroid");
 
 		while (true) {
-			prevIndex = htmlData.indexOf(
-					"<a title=\"Click to enter this course\" href=\"",
-					prevIndex);
+			prevIndex = htmlData.indexOf("/course/view.php?id=", prevIndex) + 20;
 			if (prevIndex == -1)
 				break;
-			prevIndex += 44;
-			prevIndex = htmlData.indexOf("/course/view.php?id=", prevIndex) + 20;
 			endIndex = htmlData.indexOf('\"', prevIndex);
 
-			courseIDs.add(htmlData.substring(prevIndex, endIndex));
+			int tempId;
+			try {
+				tempId = Integer.parseInt(htmlData.substring(prevIndex,
+						endIndex));
+			} catch (NumberFormatException e) {
+				continue;
+			}
 
-			prevIndex = endIndex + 2;
-			endIndex = htmlData.indexOf("</a>", prevIndex);
+			if (!courseIDs.contains(tempId)) {
+				courseIDs.add(tempId);
+				prevIndex = endIndex + 2;
+				endIndex = htmlData.indexOf("</a>", prevIndex);
 
-			courseNames.add(htmlData.substring(prevIndex, endIndex));
+				courseNames.add(htmlData.substring(prevIndex, endIndex));
+			} else
+				break;
 		}
 
 		for (int i = 0; i < courseNames.size(); i++) {
@@ -82,7 +80,9 @@ public class CourseListing extends BaseActivity {
 					"/MDroid/" + tempCourseName + "/");
 			if (!file.exists()) {
 				if (!file.mkdirs()) {
-					Log.e("TravellerLog :: ", "Problem creating course folder for "+tempCourseName);
+					Log.e("TravellerLog :: ",
+							"Problem creating course folder for "
+									+ tempCourseName);
 					Toast.makeText(getBaseContext(),
 							"failed to create folder " + file,
 							Toast.LENGTH_SHORT).show();
@@ -92,16 +92,14 @@ public class CourseListing extends BaseActivity {
 
 		LayoutInflater li = LayoutInflater.from(this);
 		LinearLayout parent = (LinearLayout) this.findViewById(R.id.myCourses);
-		
-		for(int i=0; i < courseNames.size(); i++)
-		{
+
+		for (int i = 0; i < courseNames.size(); i++) {
 			View rowView = li.inflate(R.layout.courselistviewlayout, null);
-			
-			final TextView textView = (TextView) rowView.findViewById(R.id.title);
+
+			final TextView textView = (TextView) rowView
+					.findViewById(R.id.title);
 			textView.setText(courseNames.get(i));
-			textView.setHint(courseIDs.get(i));
-			//if (position % 2 == 0)
-			//	textView.setBackgroundResource(R.drawable.listview_evenitem_color);
+			textView.setHint(Integer.toString(courseIDs.get(i)));
 
 			rowView.setClickable(true);
 			rowView.setOnClickListener(new OnClickListener() {
@@ -113,18 +111,13 @@ public class CourseListing extends BaseActivity {
 					startActivityForResult(i, REQUEST_CODE);
 				}
 			});
-			
+
 			parent.addView(rowView);
-			
+
 			if (i != courseNames.size() - 1) {
 				View divider = li.inflate(R.layout.divider, null);
 				parent.addView(divider);
-				Log.w("XYNZ", "Why you not called :(");
 			}
-		}
-		
-		if (loginCount % 3 == 0 && loginCount != 0 && rated == 0) {
-			showDialog(4);
 		}
 	}
 }

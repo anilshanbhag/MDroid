@@ -1,5 +1,4 @@
 package com.exzalt.mdroid;
-//Importing required libraries
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -28,7 +27,6 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -44,8 +42,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-//(re)-defining our Activity's class
-@SuppressLint("NewApi")
 public class MainActivity extends BaseActivity {
 
 	/** Called when the activity is first created. */
@@ -55,73 +51,64 @@ public class MainActivity extends BaseActivity {
 	Dialog firstTimeDialog;
 	SchemeRegistry schreg = new SchemeRegistry();
 	TryAsyncLogin task = null;
-	
+
 	public static DefaultHttpClient httpclient;
 
-	@SuppressLint("NewApi")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-				
+
 		appPrefs = new AppPreferences(getApplicationContext());
 
-		/*
-		 * Initialize the Http Client
-		 */
+		// Initialize the Http Client
 		httpClientBootstrap();
 
-		/*
-		 * Setting up the login dialog
-		 */
+		// Setting up the login dialog
 		loginDialog = new ProgressDialog(MainActivity.this);
 		loginDialog.setMessage("Logging In ..");
 		loginDialog.setIndeterminate(true);
 		loginDialog.setCancelable(true);
-		loginDialog.setOnCancelListener(new DialogInterface.OnCancelListener(){
+		loginDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 			public void onCancel(DialogInterface dialog) {
-				if(task != null) task.cancel(true);
+				if (task != null)
+					task.cancel(true);
 			}
-	    });
+		});
 
-		/*
-		 * Login button listener
-		 */
+		// Login button listener
 		Button loginButton = (Button) findViewById(R.id.loginButton);
 		loginButton.setOnClickListener(loginButtonListener);
-		
-		/*
-		 * Off line button listener
-		 */
+
+		// Offline button listener
 		Button offlineButton = (Button) findViewById(R.id.userOfflineButton);
 		offlineButton.setOnClickListener(userOfflineButtonListener);
 
-		/*
-		 * Loading Preferences
-		 */
+		// Loading Preferences
 		preferencesBootstrap();
 	}
-	
+
 	/*
-	 * Loading user preferences onto login page
-	 * TODO : Do something for first time
+	 * Loading user preferences onto login page TODO : Do something for first
+	 * time
 	 */
 	private void preferencesBootstrap() {
 		SharedPreferences prefsGet = getPreferences(Context.MODE_PRIVATE);
 		String userNamePref = prefsGet.getString("username", "");
 		String passwordPref = prefsGet.getString("password", "");
 		serverAddress = prefsGet.getString("serverAddress", "");
-		
+
 		Boolean firstTime = prefsGet.getBoolean("firstTime", true);
-		
-		if (firstTime) firstTimeHelp();
+
+		if (firstTime)
+			firstTimeHelp();
 
 		EditText usernameRaw = (EditText) findViewById(R.id.usernameEditText);
 		EditText passwordRaw = (EditText) findViewById(R.id.passwordEditText);
 		usernameRaw.setText(userNamePref);
 		passwordRaw.setText(passwordPref);
 	}
-	
+
 	/*
 	 * Bootstrap the HTTP client
 	 */
@@ -138,6 +125,7 @@ public class MainActivity extends BaseActivity {
 				httpParams, schreg);
 		httpclient = new DefaultHttpClient(cm, httpParams);
 	}
+
 	/*
 	 * Shows a help dialog for first time visitors
 	 */
@@ -159,7 +147,7 @@ public class MainActivity extends BaseActivity {
 				showDialog(1);
 			}
 		});
-		
+
 		firstTimeDialog.show();
 	}
 
@@ -187,8 +175,9 @@ public class MainActivity extends BaseActivity {
 				task = new TryAsyncLogin();
 				task.execute(username, password);
 			} else {
-				Toast.makeText(getBaseContext(), "Username/Password cannot be empty",
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(getBaseContext(),
+						"Username/Password cannot be empty", Toast.LENGTH_SHORT)
+						.show();
 			}
 		}
 	};
@@ -209,9 +198,8 @@ public class MainActivity extends BaseActivity {
 		}
 	};
 
-	/* 
-	 * AsycTask Thread 
-	 * TODO : Improve Error
+	/*
+	 * AsycTask Thread TODO : Improve Error
 	 */
 	private class TryAsyncLogin extends AsyncTask<String, Integer, Long> {
 		protected Long doInBackground(String... credentials) {
@@ -244,13 +232,13 @@ public class MainActivity extends BaseActivity {
 			} catch (Exception e) {
 				// nothing
 			}
-			
-			if (ret == 0) changeLoginandChangeIntent();
+
+			if (ret == 0)
+				changeLoginandChangeIntent();
 			else {
 				// 1 -> login failed
 				// 2 -> bad Internet
-				Toast.makeText(getBaseContext(),
-						"OUCH! Login Failed",
+				Toast.makeText(getBaseContext(), "OUCH! Login Failed",
 						Toast.LENGTH_LONG).show();
 			}
 		}
@@ -260,13 +248,13 @@ public class MainActivity extends BaseActivity {
 		Intent j = new Intent(this, UserOfflineFolderListing.class);
 		startActivityForResult(j, 11);
 	}
-	
+
 	/*
 	 * TODO : Check Authentication Successful
 	 */
 	public int loginPOST(String username, String password)
 			throws ClientProtocolException, IOException {
-				
+
 		// TODO : Send a get request ?? WHY ??
 		int ret = 0;
 		Log.w("MDroid", serverAddress + "/login/index.php");
@@ -280,7 +268,7 @@ public class MainActivity extends BaseActivity {
 			entity.consumeContent();
 		}
 		Log.w("MDroid2", serverAddress + "/login/index.php");
-		
+
 		HttpPost httpost = new HttpPost(serverAddress + "/login/index.php");
 
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
@@ -288,24 +276,23 @@ public class MainActivity extends BaseActivity {
 		nvps.add(new BasicNameValuePair("password", password));
 
 		httpost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
-		
+
 		response = httpclient.execute(httpost);
 		entity = response.getEntity();
 
 		String out = inputStreamToString(entity.getContent());
-
 		if (out != null) {
-			int index = htmldataString.indexOf(
-					"<div class=\"logininfo\">You are logged in as", 0);
-			if (index == -1) ret = 1;
+			int index = htmldataString.indexOf("<div class=\"logininfo\">", 0);
+			if (index == -1)
+				ret = 1;
 		} else {
 			ret = 2;
 		}
-		
+
 		if (entity != null) {
 			entity.consumeContent();
 		}
-		
+
 		return ret;
 	}
 
@@ -322,7 +309,7 @@ public class MainActivity extends BaseActivity {
 		}
 
 		htmldataString = total.toString();
-		
+
 		return htmldataString;
 	}
 
@@ -330,6 +317,7 @@ public class MainActivity extends BaseActivity {
 		Intent i = new Intent(this, CourseListing.class);
 		i.putExtra("htmlData", htmldataString);
 		startActivityForResult(i, REQUEST_CODE);
-		overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+		overridePendingTransition(android.R.anim.slide_in_left,
+				android.R.anim.slide_out_right);
 	}
 }

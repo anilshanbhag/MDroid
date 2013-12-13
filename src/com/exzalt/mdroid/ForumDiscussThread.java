@@ -94,8 +94,7 @@ public class ForumDiscussThread extends BaseActivity {
 
 			listFilesInListView(discussThreadReplySubject,
 					discussThreadReplyPerson, discussThreadReplyTime,
-					discussThreadReplyContent,ForumFileIDs,
-					ForumFileNames);
+					discussThreadReplyContent, ForumFileIDs, ForumFileNames);
 			hideLoadingMessageLayout();
 
 		}
@@ -173,35 +172,35 @@ public class ForumDiscussThread extends BaseActivity {
 			endIndex = htmlDataString.indexOf("</div>", prevIndex);
 			discussThreadReplyTime.add(htmlDataString.substring(prevIndex,
 					endIndex));
-			
-			//for attached files
-			int prevIndex1 = endIndex,endIndex1;
+
+			// for attached files
+			int prevIndex1 = endIndex, endIndex1;
 			ArrayList<String> tempForumFileIDs = new ArrayList<String>();
 			ArrayList<String> tempForumFileNames = new ArrayList<String>();
-			while(true){
+			while (true) {
 				prevIndex1 = htmlDataString.indexOf(
-                        "<div class=\"attachments\"><a href=\"", prevIndex1);
+						"<div class=\"attachments\"><a href=\"", prevIndex1);
 				if (prevIndex1 == -1)
-                    break;
+					break;
 
 				prevIndex1 += 34;
 				endIndex1 = htmlDataString.indexOf("\"", prevIndex1);
-            
-				if(endIndex1== -1)
-                    break;
-				 tempForumFileIDs.add(htmlDataString.substring(prevIndex1, endIndex1));
-                 
-                 prevIndex1 = endIndex1 + 3;
-                 prevIndex1 = htmlDataString.indexOf("\">", prevIndex1);
-                 prevIndex1 += 2;
-                 endIndex1 = htmlDataString.indexOf(
-                                 "</a>", prevIndex1);
-                 String textConvertedhtmlDataString = htmlDataString.substring(
-                                 prevIndex1, endIndex1);
-                 textConvertedhtmlDataString = android.text.Html.fromHtml(
-                                 textConvertedhtmlDataString).toString();
-                 tempForumFileNames.add(textConvertedhtmlDataString);
-                 prevIndex1 = endIndex1;
+
+				if (endIndex1 == -1)
+					break;
+				tempForumFileIDs.add(htmlDataString.substring(prevIndex1,
+						endIndex1));
+
+				prevIndex1 = endIndex1 + 3;
+				prevIndex1 = htmlDataString.indexOf("\">", prevIndex1);
+				prevIndex1 += 2;
+				endIndex1 = htmlDataString.indexOf("</a>", prevIndex1);
+				String textConvertedhtmlDataString = htmlDataString.substring(
+						prevIndex1, endIndex1);
+				textConvertedhtmlDataString = android.text.Html.fromHtml(
+						textConvertedhtmlDataString).toString();
+				tempForumFileNames.add(textConvertedhtmlDataString);
+				prevIndex1 = endIndex1;
 			}
 			ForumFileIDs.add(tempForumFileIDs);
 			ForumFileNames.add(tempForumFileNames);
@@ -209,7 +208,7 @@ public class ForumDiscussThread extends BaseActivity {
 			prevIndex = endIndex;
 			prevIndex = htmlDataString.indexOf("<div class=\"posting",
 					prevIndex) + 19;
-			prevIndex = htmlDataString.indexOf("\">",prevIndex)+2;
+			prevIndex = htmlDataString.indexOf("\">", prevIndex) + 2;
 			endIndex = htmlDataString.indexOf("</div><div class=\"", prevIndex);
 			String tempdiscussThreadReplyContent = (htmlDataString.substring(
 					prevIndex, endIndex));
@@ -239,9 +238,9 @@ public class ForumDiscussThread extends BaseActivity {
 		MySimpleArrayAdapter adapter = new MySimpleArrayAdapter(this,
 				discussThreadReplySubject, discussThreadReplyPerson,
 				discussThreadReplyTime, discussThreadReplyContent,
-				discussForumFileIDs,discussForumFileNames);
+				discussForumFileIDs, discussForumFileNames);
 		// Assign adapter to ListView
-		
+
 		forumsListView.setAdapter(adapter);
 	}
 
@@ -268,15 +267,14 @@ public class ForumDiscussThread extends BaseActivity {
 			this.discussThreadReplyContentListView = discussThreadReplyContentListView;
 			this.discussForumFileIDsListView = discussForumFileIDsListView;
 			this.discussForumFileNamesListView = discussForumFileNamesListView;
-			
+
 		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			
-			
-            convertView = LayoutInflater.from(context)
-	            		.inflate(R.layout.forumdiscussthreadlistviewlayout, null);
+
+			convertView = LayoutInflater.from(context).inflate(
+					R.layout.forumdiscussthreadlistviewlayout, null);
 			final TextView subjectTextView = (TextView) convertView
 					.findViewById(R.id.forumDiscussThreadSubject);
 			subjectTextView.setText(discussThreadReplySubjectListView
@@ -295,30 +293,35 @@ public class ForumDiscussThread extends BaseActivity {
 					.findViewById(R.id.forumDiscussThreadContent);
 			contentTextView.setText(discussThreadReplyContentListView
 					.get(position));
-			
-			ArrayList<String> fileIDs = discussForumFileIDsListView.get(position);
-	        ArrayList<String> fileNames = discussForumFileNamesListView.get(position);
-	        
-	        if(fileNames.size()==0){
-	        	System.out.println(" :():");
-	        }
-	        else{
-	        	((LinearLayout) convertView.findViewById(R.id.attachmentContainer)).setVisibility(View.VISIBLE);
-	        
-	        	LinearLayout fileList = (LinearLayout) convertView.findViewById(R.id.attachments);
-	        	fileList.removeAllViews();
-	        	
-	        
-	        	FileListAdapter adapter = new FileListAdapter(this.context,fileNames,fileIDs,position);
-	        	int i;
-	        	for(i=0;i<fileNames.size();i++){
-	        		View view = adapter.getView(i, null, null);
-	        		fileList.addView(view);
-	        	}
-	        	
-	        }
-	        return convertView;
+
+			ArrayList<String> fileIDs = discussForumFileIDsListView
+					.get(position);
+			ArrayList<String> fileNames = discussForumFileNamesListView
+					.get(position);
+
+			if (fileNames.size() == 0) {
+				System.out.println(" :():");
+			} else {
+				((LinearLayout) convertView
+						.findViewById(R.id.attachmentContainer))
+						.setVisibility(View.VISIBLE);
+
+				LinearLayout fileList = (LinearLayout) convertView
+						.findViewById(R.id.attachments);
+				fileList.removeAllViews();
+
+				FileListAdapter adapter = new FileListAdapter(this.context,
+						fileNames, fileIDs, position);
+				int i;
+				for (i = 0; i < fileNames.size(); i++) {
+					View view = adapter.getView(i, null, null);
+					fileList.addView(view);
+				}
+
+			}
+			return convertView;
 		}
+
 		@Override
 		public int getCount() {
 			// TODO Auto-generated method stub
@@ -337,14 +340,15 @@ public class ForumDiscussThread extends BaseActivity {
 			return 0;
 		}
 	}
+
 	public class FileListAdapter extends ArrayAdapter<String> {
 		private final Context context;
 		private final ArrayList<String> filenames;
 		private final ArrayList<String> fileids;
 		private int discussionNo;
 
-		public FileListAdapter(Context context,
-				ArrayList<String> fileNames, ArrayList<String> fileIDs,int discussionNo) {
+		public FileListAdapter(Context context, ArrayList<String> fileNames,
+				ArrayList<String> fileIDs, int discussionNo) {
 			super(context, R.layout.filelistviewlayout, fileNames);
 			this.context = context;
 			this.filenames = fileNames;
@@ -355,9 +359,9 @@ public class ForumDiscussThread extends BaseActivity {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			/*
-			 * This function of adapter sets the list entry
-			 * For entry at position check if already exists in filesystem
-			 * And take appropriate action
+			 * This function of adapter sets the list entry For entry at
+			 * position check if already exists in filesystem And take
+			 * appropriate action
 			 */
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -367,7 +371,6 @@ public class ForumDiscussThread extends BaseActivity {
 			final TextView textView = (TextView) rowView
 					.findViewById(R.id.myFileName);
 			// Set Name
-			System.out.println("getView - "+filenames.get(position));
 			textView.setText(filenames.get(position));
 
 			final TextView textViewDownload = (TextView) rowView
@@ -375,21 +378,21 @@ public class ForumDiscussThread extends BaseActivity {
 
 			final Button fileOperationButton = (Button) rowView
 					.findViewById(R.id.myFileButton);
-			
+
 			/*
-			 * TODO: Whats happening Here ?? 
+			 * TODO: Whats happening Here ??
 			 */
-			//TODO - added by Ayush - have to modify this i think so
-			textView.setTag(-position - discussionNo*100);
-			textViewDownload.setId(-position - discussionNo*100);
-			fileOperationButton.setId(-position - discussionNo*1000);
-			
+			// TODO - added by Ayush - have to modify this i think so
+			textView.setTag(-position - discussionNo * 100);
+			textViewDownload.setId(-position - discussionNo * 100);
+			fileOperationButton.setId(-position - discussionNo * 1000);
+
 			// check if file exists!
 			String courseDir = android.os.Environment
 					.getExternalStorageDirectory().getPath()
 					+ "/MDroid/"
 					+ courseName + "/";
-			
+
 			/*
 			 * TODO: Unnecessary looping :-/
 			 */
@@ -476,15 +479,16 @@ public class ForumDiscussThread extends BaseActivity {
 			fileOperationButton.setOnClickListener(new OnClickListener() {
 
 				public void onClick(View v) {
-					String fOperationButtonID = fileOperationButton.getId() + "";
+					String fOperationButtonID = fileOperationButton.getId()
+							+ "";
 					if (fileOperationButton.getText() == "Download") {
 						fileOperationButton.setEnabled(false);
 						fileOperationButton
 								.setBackgroundResource(R.drawable.black_btm);
-						
+
 						/*
-						 * Disable button and start download
-						 * This is done via ASync Task
+						 * Disable button and start download This is done via
+						 * ASync Task
 						 */
 						DownloadFile downloadFile = new DownloadFile();
 						downloadFile.execute(textView.getText().toString(),
@@ -497,7 +501,7 @@ public class ForumDiscussThread extends BaseActivity {
 						String fileUrl = android.os.Environment
 								.getExternalStorageDirectory().getPath()
 								+ "/MDroid/" + courseName + "/" + file;
-						
+
 						File fileToBeOpened = new File(fileUrl);
 						Intent i = new Intent();
 						i.setAction(android.content.Intent.ACTION_VIEW);
@@ -518,6 +522,7 @@ public class ForumDiscussThread extends BaseActivity {
 			return rowView;
 		}
 	}
+
 	public class DownloadFile extends AsyncTask<String, Integer, String> {
 		int resID;
 		int resIDButton;
@@ -531,7 +536,7 @@ public class ForumDiscussThread extends BaseActivity {
 				String filePath = fileDetails[1];
 				String DownloadStatusTextViewID = fileDetails[2];
 				String fOperationButtonID = fileDetails[3];
-				
+
 				resID = getResources().getIdentifier(DownloadStatusTextViewID,
 						"id", getPackageName());
 				resIDButton = getResources().getIdentifier(fOperationButtonID,
@@ -604,6 +609,7 @@ public class ForumDiscussThread extends BaseActivity {
 			}
 			return null;
 		}
+
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
@@ -638,12 +644,12 @@ public class ForumDiscussThread extends BaseActivity {
 						+ ", download complete");
 				fileOperationButton.setText("Open");
 				fileOperationButton.setBackgroundResource(R.color.buttonGreen);
-			}
-			else{
+			} else {
 				System.out.println("downloadStatusTextView = null");
 			}
 		}
 	}
+
 	public String getPageContentForIITBDownload(String filePath)
 			throws ClientProtocolException, IOException {
 		DefaultHttpClient httpclient = MainActivity.httpclient;
@@ -654,7 +660,8 @@ public class ForumDiscussThread extends BaseActivity {
 		HttpResponse responseCourse = httpclient.execute(httpgetCourse);
 		HttpEntity entityCourse = responseCourse.getEntity();
 
-		String buffer = inputStreamToString(responseCourse.getEntity().getContent());
+		String buffer = inputStreamToString(responseCourse.getEntity()
+				.getContent());
 		fileDownloadAddress = extractFileDetailsForIITBDownload(buffer);
 
 		if (entityCourse != null) {
@@ -662,6 +669,7 @@ public class ForumDiscussThread extends BaseActivity {
 		}
 		return fileDownloadAddress;
 	}
+
 	public String extractFileDetailsForIITBDownload(String htmlDataString) {
 		int prevIndex = 0;
 		int endIndex = 0;
@@ -678,8 +686,8 @@ public class ForumDiscussThread extends BaseActivity {
 
 		return fileDownloadAddress;
 	}
-	private String inputStreamToString(InputStream is)
-			throws IOException {
+
+	private String inputStreamToString(InputStream is) throws IOException {
 		String line = "";
 		StringBuilder total = new StringBuilder();
 
@@ -690,7 +698,7 @@ public class ForumDiscussThread extends BaseActivity {
 		while ((line = rd.readLine()) != null) {
 			total.append(line);
 		}
-		
+
 		return total.toString();
 	}
 }
